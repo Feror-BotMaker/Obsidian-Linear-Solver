@@ -21,6 +21,8 @@
     "javascript-lp-solver": "1.0.3"
   },
   "devDependencies": {
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "6.38.6",
     "@types/node": "24.3.1",
     "esbuild": "0.28.2",
     "obsidian": "1.13.1",
