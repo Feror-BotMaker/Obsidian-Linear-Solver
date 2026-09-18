@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify tag matches plugin version
+        run: test "v$(node -p "require('./manifest.json').version")" = "${GITHUB_REF_NAME}"
+
+      - name: Run checks
+        run: npm run check
+
+      - name: Package plugin
+        run: npm run package
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          dist/main.js
+          dist/manifest.json
+          dist/styles.css
+          "dist/linear-solver-${GITHUB_REF_NAME#v}.zip"
+          --verify-tag
+          --generate-notes
+          --title "Linear Solver ${GITHUB_REF_NAME}"

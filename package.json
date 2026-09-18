@@ -1,0 +1,31 @@
+{
+  "name": "obsidian-linear-solver",
+  "version": "0.1.0",
+  "description": "Solve and visualize GMPL linear programs in Obsidian notes.",
+  "main": "main.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "install:vault": "bash scripts/install-vault.sh",
+    "package": "bash scripts/package-release.sh",
+    "test": "vitest run",
+    "check": "tsc --noEmit && npm run test && npm run build"
+  },
+  "keywords": [
+    "obsidian",
+    "gmpl",
+    "linear-programming"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "javascript-lp-solver": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.1",
+    "esbuild": "0.28.2",
+    "obsidian": "1.13.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "vitest": "4.1.11"
+  }
+}
