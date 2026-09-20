@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - "*.*.*"
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Verify tag matches plugin version
-        run: test "v$(node -p "require('./manifest.json').version")" = "${GITHUB_REF_NAME}"
+        run: test "$(node -p "require('./manifest.json').version")" = "${GITHUB_REF_NAME}"
 
       - name: Run checks
         run: npm run check
@@ -42,7 +42,7 @@ jobs:
           dist/main.js
           dist/manifest.json
           dist/styles.css
-          "dist/linear-solver-${GITHUB_REF_NAME#v}.zip"
+          "dist/linear-solver-${GITHUB_REF_NAME}.zip"
           --verify-tag
           --generate-notes
           --title "Linear Solver ${GITHUB_REF_NAME}"

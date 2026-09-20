@@ -54,7 +54,7 @@ During development, `npm run dev` watches and rebuilds `main.js`.
 
 ## Releases
 
-Pushing a version tag such as `v0.1.0` runs the full check suite and publishes a GitHub release containing the three Obsidian runtime files plus an installable ZIP. The tag must match the version in `manifest.json`.
+Pushing a version tag such as `0.1.0` runs the full check suite and publishes a GitHub release containing the three Obsidian runtime files plus an installable ZIP. Obsidian requires the tag to match the version in `manifest.json` exactly, without a `v` prefix.
 
 To create the same package locally:
 
