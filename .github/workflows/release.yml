@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   release:
@@ -34,6 +36,16 @@ jobs:
       - name: Package plugin
         run: npm run package
 
+      - name: Attest main.js provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/main.js
+
+      - name: Attest styles.css provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/styles.css
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -42,7 +54,6 @@ jobs:
           dist/main.js
           dist/manifest.json
           dist/styles.css
-          "dist/linear-solver-${GITHUB_REF_NAME}.zip"
           --verify-tag
           --generate-notes
           --title "Linear Solver ${GITHUB_REF_NAME}"

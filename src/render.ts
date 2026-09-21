@@ -10,21 +10,15 @@ function formatNumber(value: number, precision: number): string {
 }
 
 function badge(text: string, tone: string): HTMLElement {
-  const element = document.createElement("span");
-  element.className = `linear-solver-badge linear-solver-badge--${tone}`;
-  element.textContent = text;
-  return element;
+  return createSpan({ cls: `linear-solver-badge linear-solver-badge--${tone}`, text });
 }
 
 function makeTable(headers: string[], rows: (string | HTMLElement)[][]): HTMLTableElement {
-  const table = document.createElement("table");
-  table.className = "linear-solver-table";
+  const table = createEl("table", { cls: "linear-solver-table" });
   const thead = table.createTHead();
   const headerRow = thead.insertRow();
   for (const header of headers) {
-    const cell = document.createElement("th");
-    cell.scope = "col";
-    cell.textContent = header;
+    const cell = createEl("th", { text: header, attr: { scope: "col" } });
     headerRow.appendChild(cell);
   }
   const tbody = table.createTBody();

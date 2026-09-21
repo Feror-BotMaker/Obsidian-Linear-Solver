@@ -3,13 +3,10 @@ import type { LinearProgram, Solution } from "./model";
 interface Point { x: number; y: number }
 interface HalfPlane { a: number; b: number; c: number; keepLess: boolean }
 
-const SVG_NS = "http://www.w3.org/2000/svg";
 const EPSILON = 1e-9;
 
 function svg<K extends keyof SVGElementTagNameMap>(name: K, attributes: Record<string, string | number> = {}): SVGElementTagNameMap[K] {
-  const element = document.createElementNS(SVG_NS, name);
-  for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
-  return element;
+  return createSvg(name, { attr: attributes });
 }
 
 function intersect(start: Point, end: Point, plane: HalfPlane): Point {
@@ -101,8 +98,7 @@ export function createFeasiblePlot(program: LinearProgram, solution: Solution): 
   ];
   for (const plane of planes) polygon = clipPolygon(polygon, plane);
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "linear-solver-plot";
+  const wrapper = createDiv({ cls: "linear-solver-plot" });
   const chart = svg("svg", { viewBox: "0 0 720 430", role: "img", "aria-label": `Feasible region for ${xVariable!.name} and ${yVariable!.name}` });
   wrapper.appendChild(chart);
   const margin = { left: 68, right: 24, top: 30, bottom: 58 };

@@ -1,4 +1,5 @@
-import { Plugin, PluginSettingTab, Setting } from "obsidian";
+import { Plugin, PluginSettingTab } from "obsidian";
+import type { SettingDefinitionItem } from "obsidian";
 import { parseGmpl } from "./parser";
 import { renderError, renderResult } from "./render";
 import { solveProgram } from "./solver";
@@ -42,27 +43,42 @@ class LinearSolverSettingTab extends PluginSettingTab {
     super(plugin.app, plugin);
   }
 
-  display(): void {
-    this.containerEl.empty();
-    new Setting(this.containerEl)
-      .setName("Show model source")
-      .setDesc("Keep the GMPL source visible above the result in reading view.")
-      .addToggle((toggle) => toggle
-        .setValue(this.plugin.settings.showSource)
-        .onChange(async (value) => {
-          this.plugin.settings.showSource = value;
-          await this.plugin.saveSettings();
-        }));
-    new Setting(this.containerEl)
-      .setName("Decimal precision")
-      .setDesc("Maximum number of decimal places shown in results.")
-      .addSlider((slider) => slider
-        .setLimits(0, 10, 1)
-        .setDynamicTooltip()
-        .setValue(this.plugin.settings.precision)
-        .onChange(async (value) => {
-          this.plugin.settings.precision = value;
-          await this.plugin.saveSettings();
-        }));
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        name: "Show model source",
+        desc: "Keep the GMPL source visible above the result in reading view.",
+        control: {
+          type: "toggle",
+          key: "showSource",
+          defaultValue: DEFAULT_SETTINGS.showSource
+        }
+      },
+      {
+        name: "Decimal precision",
+        desc: "Maximum number of decimal places shown in results.",
+        control: {
+          type: "slider",
+          key: "precision",
+          min: 0,
+          max: 10,
+          step: 1,
+          defaultValue: DEFAULT_SETTINGS.precision
+        }
+      }
+    ];
+  }
+
+  getControlValue(key: string): unknown {
+    if (key === "showSource") return this.plugin.settings.showSource;
+    if (key === "precision") return this.plugin.settings.precision;
+    return undefined;
+  }
+
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    if (key === "showSource" && typeof value === "boolean") this.plugin.settings.showSource = value;
+    else if (key === "precision" && typeof value === "number") this.plugin.settings.precision = value;
+    else return;
+    await this.plugin.saveSettings();
   }
 }

@@ -75,7 +75,7 @@ export function solveProgram(program: LinearProgram): Solution {
   }
 
   try {
-    const raw = solver.Solve(model as never) as RawResult;
+    const raw = solver.Solve(model) as RawResult;
     if (raw.feasible === false) return { status: "infeasible", variables: [], constraints: [], message: "The model has no feasible solution." };
     if (raw.bounded === false) return { status: "unbounded", variables: [], constraints: [], message: "The objective is unbounded." };
     const values = Object.fromEntries(program.variables.map(({ name }) => [name, typeof raw[name] === "number" ? raw[name] : 0]));
